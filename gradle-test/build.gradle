@@ -1,0 +1,49 @@
+plugins {
+    id 'java'
+    id "jacoco"
+}
+
+group 'jbr.gradle'
+sourceCompatibility = '1.8'
+
+repositories {
+	mavenCentral()
+    jcenter()
+}
+
+dependencies {
+	compileOnly 'org.projectlombok:lombok:1.18.20'
+	annotationProcessor 'org.projectlombok:lombok:1.18.20'
+	
+	testAnnotationProcessor 'org.projectlombok:lombok:1.18.20'
+	testCompileOnly 'org.projectlombok:lombok:1.18.20'
+	testImplementation('org.junit.jupiter:junit-jupiter:5.7.2')
+	testImplementation('org.junit.platform:junit-platform-engine:1.7.2')
+	
+}
+
+test {
+    testLogging {
+        events "passed", "skipped", "failed", "standardOut", "standardError"
+    }
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn test
+}
+
+jacoco {
+    toolVersion = "0.8.5"
+    reportsDir = file("$buildDir/jacoco")
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = 1
+            }
+        }
+    }
+}
